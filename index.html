@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sarah's Candy Spot</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0; padding: 0; background: #fff0f6; color: #333;
+  }
+  header {
+    background: #d8516a;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 700;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 600;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
+  main {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  footer {
+    background: #d8516a;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 3rem;
+  }
+  h2 {
+    color: #d8516a;
+    margin-bottom: 1rem;
+  }
+  .candy-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+    gap: 1rem;
+  }
+  .candy-item {
+    background: white;
+    border: 2px solid #d8516a;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .candy-item img {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+  button {
+    background: #d8516a;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: 600;
+  }
+  button:hover {
+    background: #b43b53;
+  }
+  #cartItems {
+    margin-top: 1rem;
+  }
+  .cart-item {
+    background: white;
+    padding: 0.5rem;
+    border: 1px solid #d8516a;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cart-item span {
+    flex: 1;
+  }
+  .cart-item button {
+    background: #a12c3a;
+    padding: 0.25rem 0.5rem;
+  }
+  form label {
+    display: block;
+    margin-top: 0.75rem;
+  }
+  form input, form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  form button[type="submit"] {
+    margin-top: 1rem;
+    background: #5f1f31;
+  }
+  .hidden {
+    display: none;
+  }
+  /* Responsive nav */
+  @media (max-width: 600px) {
+    nav a {
+      display: block;
+      margin: 0.5rem 0 0 0;
+    }
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sarah's Candy Spot</h1>
+  <nav>
+  <a href="#" onclick="showSection('home')">Home</a>
+  <a href="#" onclick="showSection('about')">About Us</a>
+  <a href="#" onclick="showSection('shop')">Shop</a>
+  <a href="#" onclick="showSection('cart')">Cart (<span id="cartCount">0</span>)</a>
+  <a href="#" onclick="tryCheckout()">Checkout</a> <!-- NEW LINK -->
+  <a href="#" onclick="showSection('contact')">Contact Us</a>
+</nav>
+
+</header>
+
+<main>
+  <!-- Home -->
+  <section id="home" class="section">
+    <h2>Welcome to Sarah's Candy Spot!</h2>
+    <p>Your sweetest destination for delicious handcrafted candies. Browse our shop and add your favorites to your cart.</p>
+    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80" alt="Candies" style="width:100%; border-radius: 8px; margin-top: 1rem;" />
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section hidden">
+    <h2>About Us</h2>
+    <p>Sarah's Candy Spot was founded in 2025 with a passion for creating sweet moments. We specialize in a variety of candies made from natural ingredients, perfect for gifts or your own treat!</p>
+  </section>
+
+  <!-- Shop -->
+  <section id="shop" class="section hidden">
+    <h2>Shop Our Candies</h2>
+    <div class="candy-list" id="candyList">
+      <!-- Candy items added by JS -->
+    </div>
+  </section>
+
+  <!-- Cart -->
+  <section id="cart" class="section hidden">
+    <h2>Your Cart</h2>
+    <div id="cartItems">
+      <p>Your cart is empty.</p>
+    </div>
+    <button onclick="showSection('checkout')" id="checkoutBtn" class="hidden">Proceed to Checkout</button>
+  </section>
+
+  <!-- Checkout -->
+  <section id="checkout" class="section hidden">
+    <h2>Checkout</h2>
+    <form id="checkoutForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" required />
+
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" required />
+
+      <label for="address">Shipping Address:</label>
+      <textarea id="address" rows="3" required></textarea>
+
+      <button type="submit">Place Order</button>
+    </form>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section hidden">
+    <h2>Contact Us</h2>
+    <p>Have questions or want to say hi? Reach out to us!</p>
+    <form id="contactForm">
+      <label for="contactName">Name:</label>
+      <input type="text" id="contactName" required />
+      
+      <label for="contactEmail">Email:</label>
+      <input type="email" id="contactEmail" required />
+      
+      <label for="message">Message:</label>
+      <textarea id="message" rows="4" required></textarea>
+      
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Sarah's Candy Spot | Follow us on 
+  <a href="https://facebook.com" target="_blank" style="color:white; text-decoration: underline;">Facebook</a>, 
+  <a href="https://instagram.com" target="_blank" style="color:white; text-decoration: underline;">Instagram</a>
+</footer>
+
+<script>
+  // Candy data
+  const candies = [
+    {id:1, name:'Chocolate Truffles', price: 20, img:'https://images.unsplash.com/photo-1600283379595-7e4ee749c508?auto=format&fit=crop&w=150&q=80'},
+    {id:2, name:'Gummy Bears', price: 10, img:'https://images.unsplash.com/photo-1606312610377-5c44ec3d3924?auto=format&fit=crop&w=150&q=80'},
+    {id:3, name:'Lollipops', price: 5, img:'https://images.unsplash.com/photo-1550345334-12d1d4f74a0f?auto=format&fit=crop&w=150&q=80'},
+    {id:4, name:'Caramel Fudge', price: 15, img:'https://images.unsplash.com/photo-1570624381709-902f5e3ae53f?auto=format&fit=crop&w=150&q=80'},
+    {id:5, name:'Sour Worms', price: 8, img:'https://images.unsplash.com/photo-1545060894-c2caa131d68a?auto=format&fit=crop&w=150&q=80'},
+  ];
+
+  // Cart storage
+  let cart = [];
+
+  // DOM Elements
+  const candyListEl = document.getElementById('candyList');
+  const cartCountEl = document.getElementById('cartCount');
+  const cartItemsEl = document.getElementById('cartItems');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  // Show section and hide others
+  function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(sec => {
+      if (sec.id === sectionId) {
+        sec.classList.remove('hidden');
+      } else {
+        sec.classList.add('hidden');
+      }
+    });
+    if(sectionId === 'cart') renderCart();
+    if(sectionId === 'shop') renderCandies();
+    if(sectionId === 'checkout') {
+      if(cart.length === 0) {
+        alert('Your cart is empty! Please add some candies first.');
+        showSection('shop');
+      }
+    }
+  }
+
+  // Render candies on shop page
+  function renderCandies() {
+    candyListEl.innerHTML = '';
+    candies.forEach(candy => {
+      const div = document.createElement('div');
+      div.className = 'candy-item';
+      div.innerHTML = `
+        <img src="${candy.img}" alt="${candy.name}" />
+        <h3>${candy.name}</h3>
+        <p>R${candy.price.toFixed(2)}</p>
+        <button onclick="addToCart(${candy.id})">Add to Cart</button>
+      `;
+      candyListEl.appendChild(div);
+    });
+  }
+
+  // Add to cart
+  function addToCart(id) {
+    const candy = candies.find(c => c.id === id);
+    const cartItem = cart.find(item => item.id === id);
+    if (cartItem) {
+      cartItem.quantity++;
+    } else {
+      cart.push({...candy, quantity:1});
+    }
+    updateCartCount();
+    alert(`${candy.name} added to cart.`);
+  }
+
+  // Update cart count in nav
+  function updateCartCount() {
+    let count = cart.reduce((acc, item) => acc + item.quantity, 0);
+    cartCountEl.textContent = count;
+  }
+
+  // Render cart page
+  function renderCart() {
+    cartItemsEl.innerHTML = '';
+    if(cart.length === 0) {
+      cartItemsEl.innerHTML = '<p>Your cart is empty.</p>';
+      checkoutBtn.classList.add('hidden');
+      return;
+    }
+    checkoutBtn.classList.remove('hidden');
+
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <span>${item.name} x${item.quantity} - R${(item.price * item.quantity).toFixed(2)}</span>
+        <button onclick="removeFromCart(${item.id})">Remove</button>
+      `;
+      cartItemsEl.appendChild(div);
+    });
+
+    // Show total price
+    const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const totalDiv = document.createElement('div');
+    totalDiv.style.fontWeight = '700';
+    totalDiv.style.marginTop = '1rem';
+    totalDiv.textContent = `Total: R${total.toFixed(2)}`;
+    cartItemsEl.appendChild(totalDiv);
+  }
+
+  // Remove from cart
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    renderCart();
+    updateCartCount();
+  }
+
+  // Checkout form handling
+  document.getElementById('checkoutForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    if(!name || !email || !address) {
+      alert('Please fill all fields.');
+      return;
+    }
+    alert(`Thank you, ${name}! Your order has been placed.\nWe will email you at ${email} with shipping details.`);
+    cart = [];
+    updateCartCount();
+    showSection('home');
+    this.reset();
+  });
+
+  // Contact form handling
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if(!name || !email || !message) {
+      alert('Please fill all fields.');
+      return;
+    }
+    alert(`Thanks for reaching out, ${name}! We will respond to ${email} soon.`);
+    this.reset();
+  });
+
+  // Initialize
+  showSection('home');
+</script>
+
+</body>
+</html>
